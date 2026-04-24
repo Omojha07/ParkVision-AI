@@ -1,263 +1,99 @@
-# 🅿️ Smart Parking Detection System
-### YOLOv8 · PKLot Dataset · Real-time Space Classification
+<div align="center">
+  <img src="https://raw.githubusercontent.com/ultralytics/assets/main/yolov8/banner-yolov8.png" width="100%" alt="YOLOv8 Banner">
+  
+  # 🅿️ ParkVision AI
+  **A real-time, ultra-precise Smart Parking Detection System powered by YOLOv8 and Streamlit.**
+  
+  [![Python](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://www.python.org/)
+  [![Ultralytics YOLOv8](https://img.shields.io/badge/YOLO-v8-yellow.svg)](https://github.com/ultralytics/ultralytics)
+  [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B.svg)](https://streamlit.io/)
+  [![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green.svg)](https://opencv.org/)
+</div>
 
 ---
 
-## Overview
+## 🌟 Overview
 
-Detects and classifies parking spaces as **empty** or **occupied** using
-[Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) fine-tuned on
-the [PKLot dataset](https://universe.roboflow.com/roboflow-100/pklot-640).
+**ParkVision AI** is a production-ready computer vision application designed to monitor CCTV and surveillance feeds to automatically classify parking spaces in real-time. By leveraging a fine-tuned **YOLOv8** model trained on the PKLot dataset, the system accurately distinguishes between empty and occupied spaces, even in highly dense parking lots.
 
-| Class | Color | Description |
-|---|---|---|
-| `space-empty` | 🟩 Neon green | Free parking slot |
-| `space-occupied` | 🟥 Red | Occupied slot |
+### ✨ Key Features
+- **Real-Time Video Analytics:** Stream live RTSP/HTTP camera feeds or upload `.mp4` files for instantaneous analysis.
+- **Dynamic Auto-Calibration:** Built-in tensor calibration normalizes raw YOLOv8 probabilities to provide a highly accurate, user-friendly 0-100% confidence slider.
+- **Agnostic Non-Maximum Suppression (NMS):** Smart overlapping box removal ensures that tightly parked cars aren't double-counted with conflicting red/green boxes.
+- **High-Density Capable:** Process massive 4K drone feeds with the ability to detect and track over 1,000 independent parking spaces simultaneously (`max_det=1000`).
+- **Interactive Streamlit GUI:** A sleek, dark-themed dashboard providing live metrics (Total, Available, Occupied).
 
 ---
 
-## Project Structure
+## 🛠️ Project Architecture
 
+```text
+ParkVision/
+├── app.py                      # Streamlit interactive dashboard & auto-calibration engine
+├── smart_parking_system.py     # Core YOLOv8 OOP Engine (Train/Predict modules)
+├── parking.yaml                # Dataset configuration matrix
+├── best_model.pt               # Compiled production weights (add this after training)
+├── requirements.txt            # Environment dependencies
+└── .gitignore                  # Keeps your repo clean from massive datasets
 ```
-smart_parking/
-├── smart_parking_system.py   # Main script (all modules)
-├── parking.yaml              # Dataset configuration
-├── requirements.txt          # Python dependencies
-├── README.md                 # This file
-├── dataset/                  # PKLot dataset (download separately)
-│   ├── train/images/
-│   ├── valid/images/
-│   └── test/images/
-├── runs/                     # Training output (auto-created)
-│   └── detect/parking/
-│       └── weights/
-│           ├── best.pt       ← best model weights
-│           └── last.pt
-├── output_folder/            # Folder prediction results
-├── parking_log.csv           # Auto-generated activity log
-└── folder_results.csv        # Batch prediction summary
-```
 
 ---
 
-## Installation
+## 🚀 Quick Start
 
-### 1 · Clone / download this project
-
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourname/smart-parking-detection
-cd smart_parking
+git clone https://github.com/YourUsername/ParkVision-AI.git
+cd ParkVision-AI
 ```
 
-### 2 · Create virtual environment (recommended)
-
+### 2. Install Dependencies
+It is highly recommended to use a virtual environment.
 ```bash
 python -m venv venv
-source venv/bin/activate        # Linux / macOS
-venv\Scripts\activate           # Windows
-```
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux
 
-### 3 · Install dependencies
-
-```bash
 pip install -r requirements.txt
 ```
 
-**GPU support (optional but recommended):**
-
+### 3. Launch the Dashboard
+Ensure you have your weights (`best_model.pt`) in the root folder, then boot the system:
 ```bash
-# CUDA 12.1
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+streamlit run app.py
 ```
-
-### 4 · Download the PKLot dataset
-
-```bash
-# Option A — Roboflow CLI
-pip install roboflow
-python - <<'EOF'
-from roboflow import Roboflow
-rf = Roboflow(api_key="YOUR_API_KEY")
-proj = rf.workspace("roboflow-100").project("pklot-640")
-proj.version(1).download("yolov8", location="./dataset")
-EOF
-
-# Option B — Manual
-# Download from https://universe.roboflow.com/roboflow-100/pklot-640
-# Extract to ./dataset/ preserving train/valid/test structure
-```
-
-Update `parking.yaml` → `path:` to match your local path.
 
 ---
 
-## Usage
+## 🧠 Model Training
 
-### Train
-
-```bash
-# Quick start (YOLOv8 Nano, 50 epochs, GPU auto-detect)
-python smart_parking_system.py --mode train --data parking.yaml
-
-# Full options
-python smart_parking_system.py \
-  --mode train \
-  --data parking.yaml \
-  --model yolov8s.pt \    # yolov8n.pt (fastest) or yolov8s.pt (better accuracy)
-  --epochs 100 \
-  --batch 32 \
-  --imgsz 640 \
-  --device 0              # 0 = first GPU, cpu = CPU only
-```
-
-Best weights are saved automatically to `runs/detect/parking/weights/best.pt`.
-
----
-
-### Evaluate
+If you wish to fine-tune the model yourself or adjust for a new camera angle (Domain Shift adaptation), you can utilize the core engine:
 
 ```bash
-python smart_parking_system.py \
-  --mode eval \
-  --weights runs/detect/parking/weights/best.pt \
-  --data parking.yaml \
-  --conf 0.25
+# Train the model (Optimized for RTX 3000/4000 series via FP32 math)
+python smart_parking_system.py --mode train --epochs 100 --batch 4
 ```
-
-Prints: **mAP@0.5**, **mAP@0.5:0.95**, **Precision**, **Recall**.
+*Note: Mixed Precision (AMP) is disabled by default to prevent FP16 underflow bugs on dense datasets.*
 
 ---
 
-### Predict — Single Image
+## 📸 Expected Output
 
-```bash
-python smart_parking_system.py \
-  --mode predict \
-  --weights best.pt \
-  --source parking_lot.jpg \
-  --conf 0.3
-```
+The UI provides a live heads-up display overlay on all processed frames:
+- 🟩 **Green Boxes:** `space-empty`
+- 🟥 **Red Boxes:** `space-occupied`
 
-Annotated image saved as `output_parking_lot.jpg`.
-
----
-
-### Predict — Folder of Images
-
-```bash
-python smart_parking_system.py \
-  --mode predict \
-  --weights best.pt \
-  --source ./test_images/
-```
-
-Results written to `output_folder/` + `folder_results.csv`.
-
----
-
-### Predict — Video File
-
-```bash
-python smart_parking_system.py \
-  --mode predict \
-  --weights best.pt \
-  --source parking_video.mp4
-```
-
-Output video: `output_parking_video.mp4`. Press **Q** to stop early.
-
----
-
-### Live Webcam
-
-```bash
-python smart_parking_system.py \
-  --mode webcam \
-  --weights best.pt \
-  --cam 0                 # camera index
-  --conf 0.25
-```
-
-Press **Q** to quit.
-
----
-
-### Streamlit GUI
-
-```bash
-pip install streamlit
-streamlit run smart_parking_system.py -- --mode gui
-```
-
-Opens a browser UI for uploading images and viewing annotated results.
-
----
-
-## Expected Performance (YOLOv8n, PKLot)
-
-| Metric | Approx. Value |
-|---|---|
-| mAP@0.5 | ~0.94 |
-| mAP@0.5:0.95 | ~0.72 |
-| Precision | ~0.93 |
-| Recall | ~0.91 |
-
-*Values vary with training duration, hardware, and dataset split.*
-
----
-
-## HUD Overlay
-
-Every output frame includes:
-
-```
+```text
 ┌──────────────────────────────────────────────────┐
-│  Available: 12 / 50          Occupied: 38        │
-│  76.0% Free                  Empty: 12           │
+│  Available: 67 / 199         Occupied: 132       │
+│  Free: 33.7%                 Empty: 67           │
 └──────────────────────────────────────────────────┘
-⚠  ALL PARKING SPACES ARE OCCUPIED  ⚠  (alert bar, if full)
 ```
 
 ---
 
-## Logging
+## 🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
-Every prediction appends a row to `parking_log.csv`:
-
-```
-timestamp,source,total,occupied,empty,availability_pct,is_full
-2024-01-15T14:32:01,lot_a.jpg,50,38,12,24.00,False
-```
-
----
-
-## CLI Reference
-
-```
-usage: smart_parking_system.py [-h] --mode {train,eval,predict,webcam,gui}
-                                [--weights WEIGHTS] [--conf CONF]
-                                [--imgsz IMGSZ] [--device DEVICE]
-                                [--data DATA] [--epochs EPOCHS]
-                                [--batch BATCH] [--model MODEL]
-                                [--source SOURCE] [--cam CAM] [--no-save]
-
-Options:
-  --mode       train | eval | predict | webcam | gui
-  --weights    Path to .pt weights (default: yolov8n.pt)
-  --conf       Confidence threshold 0–1 (default: 0.25)
-  --imgsz      Inference size (default: 640)
-  --device     cpu | 0 | auto (default: auto)
-  --data       Dataset YAML for train/eval (default: parking.yaml)
-  --epochs     Training epochs (default: 50)
-  --batch      Batch size (default: 16)
-  --model      Base model for training (default: yolov8n.pt)
-  --source     Image / folder / video path for predict mode
-  --cam        Webcam index (default: 0)
-  --no-save    Skip saving annotated output files
-```
-
----
-
-## License
-
-MIT — free to use, modify, and distribute.
+## 📝 License
+This project is [MIT](https://choosealicense.com/licenses/mit/) licensed.
