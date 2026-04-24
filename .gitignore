@@ -1,0 +1,27 @@
+# Dataset Folders (DO NOT UPLOAD TO GITHUB)
+train/
+test/
+valid/
+dataset/
+
+# YOLO Cache & Runs
+*.cache
+runs/
+
+# Python Virtual Environments
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Output Files
+output_*
+*.mp4
+*.avi
+*.jpg
+*.png

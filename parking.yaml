@@ -1,0 +1,21 @@
+# ────────────────────────────────────────────────
+#  parking.yaml — PKLot Parking Dataset Config
+#  Compatible with Ultralytics YOLOv8
+# ────────────────────────────────────────────────
+
+# Paths are relative to the dataset root.
+# Adjust the 'path' field to point to your
+# downloaded PKLot dataset folder.
+
+path: .          # root of the dataset
+train: train/images
+val:   valid/images
+test:  test/images
+
+# Number of classes
+nc: 2
+
+# Class names (index → label)
+names:
+  0: space-empty
+  1: space-occupied
