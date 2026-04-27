@@ -1,12 +1,11 @@
 # Smart Parking Detection System — Requirements
 # ─────────────────────────────────────────────
 # Core
-ultralytics>=8.0.0
-opencv-python-headless>=4.8.0
-numpy>=1.24.0
-pandas>=2.0.0
-matplotlib>=3.7.0
-PyYAML>=6.0
+streamlit
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+Pillow
+ultralytics
 
 # Optional GPU (uncomment & adjust CUDA version)
 # torch>=2.0.0 --index-url https://download.pytorch.org/whl/cu121
