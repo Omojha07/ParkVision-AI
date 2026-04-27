@@ -5,7 +5,7 @@ streamlit
 opencv-python-headless==4.9.0.80
 numpy==1.26.4
 Pillow
-ultralytics
+ultralytics==8.2.0
 
 # Optional GPU (uncomment & adjust CUDA version)
 # torch>=2.0.0 --index-url https://download.pytorch.org/whl/cu121
