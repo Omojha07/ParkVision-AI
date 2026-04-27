@@ -93,5 +93,3 @@ The UI provides a live heads-up display overlay on all processed frames:
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page.
 
-## 📝 License
-This project is [MIT](https://choosealicense.com/licenses/mit/) licensed.
