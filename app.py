@@ -1,5 +1,6 @@
 import streamlit as st
-import os
+import cv2
+st.write(cv2.__version__)
 import tempfile
 from PIL import Image
 from pathlib import Path
