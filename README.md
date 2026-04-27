@@ -1,6 +1,4 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/ultralytics/assets/main/yolov8/banner-yolov8.png" width="100%" alt="YOLOv8 Banner">
-  
+
   # 🅿️ ParkVision AI
   **A real-time, ultra-precise Smart Parking Detection System powered by YOLOv8 and Streamlit.**
   
